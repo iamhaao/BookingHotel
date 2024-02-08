@@ -4,6 +4,7 @@ import { check, validationResult } from "express-validator";
 import express, { Request, Response } from "express";
 const router = express.Router();
 import User from "../models/user";
+import verifyToken from "../middleware/auth";
 router.post(
   "/signin",
   [
@@ -36,7 +37,6 @@ router.post(
       );
       res.cookie("auth_token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
         maxAge: 86400000,
       });
       res.status(200).json({ userId: user._id });
@@ -46,5 +46,18 @@ router.post(
     }
   }
 );
+router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
+  res.status(200).send({ userId: req.userId });
+});
+
+// Sign-out route
+router.post("/signout", (req: Request, res: Response) => {
+  res.cookie("auth_token", "", {
+    maxAge: 0,
+    httpOnly: true,
+  });
+
+  res.status(200).json({ message: "Sign-out successful" });
+});
 
 export default router;
