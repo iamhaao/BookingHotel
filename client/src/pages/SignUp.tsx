@@ -34,15 +34,11 @@ function SignUp() {
       queryClient.invalidateQueries("validateToken");
       navigate("/");
     },
-    onError: (error: AxiosError) => {
-      console.error(error);
+    onError: (error: AxiosError<apiClient.ApiResponse>) => {
+      const errorMessage = (error.response?.data?.message ||
+        "An error occurred") as string;
 
-      Toast({
-        message: error.response?.data
-          ? Object.values(error.response?.data)[0]
-          : "Something wrong",
-        type: "ERROR",
-      });
+      Toast({ message: errorMessage, type: "ERROR" });
     },
   });
   const onSubmit = handleSubmit((data) => {

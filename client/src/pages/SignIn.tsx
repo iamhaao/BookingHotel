@@ -1,10 +1,11 @@
 import { useForm } from "react-hook-form";
 import Layout from "../layouts/Layout";
 import { useMutation, useQueryClient } from "react-query";
-import { signIn } from "../api";
+import { ApiResponse, signIn } from "../api";
 import Toast from "../components/Toast";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { AxiosError } from "axios";
 export type SignInFormData = {
   email: string;
   password: string;
@@ -24,8 +25,11 @@ function SignIn() {
       navigate("/");
       queryClient.invalidateQueries("validateToken");
     },
-    onError: (error: Error) => {
-      Toast({ message: error.message, type: "ERROR" });
+    onError: (error: AxiosError<ApiResponse>) => {
+      const errorMessage = (error.response?.data?.message ||
+        "An error occurred") as string;
+
+      Toast({ message: errorMessage, type: "ERROR" });
     },
   });
 
