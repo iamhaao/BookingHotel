@@ -38,7 +38,9 @@ function SignUp() {
       console.error(error);
 
       Toast({
-        message: error.message,
+        message: error.response?.data
+          ? Object.values(error.response?.data)[0]
+          : "Something wrong",
         type: "ERROR",
       });
     },

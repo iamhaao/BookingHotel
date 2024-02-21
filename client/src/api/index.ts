@@ -21,42 +21,58 @@ export const register = async (formData: RegisterFormData) => {
   }
 };
 export const signIn = async (formData: SignInFormData) => {
-  const response = await axios.post(
-    `${API_BASE_URL}/api/auth/signin`,
-    formData,
-    {
+  try {
+    await axios.post(`${API_BASE_URL}/api/auth/signin`, formData, {
       headers: {
         "Content-Type": "application/json",
       },
       withCredentials: true,
-    }
-  );
-  if (response.status !== 200) {
-    throw new Error(response.data);
+    });
+  } catch (error) {
+    return await Promise.reject(error);
   }
 };
+
 export const validateToken = async () => {
-  const response = await axios.get(`${API_BASE_URL}/api/auth/validate-token`, {
-    withCredentials: true,
-  });
-  if (response.status !== 200) {
-    throw new Error("Token invalid");
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/auth/validate-token`,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return await Promise.reject(error);
   }
-  return response.data;
 };
 
 export const signOut = async () => {
-  const response = await axios.post(
-    `${API_BASE_URL}/api/auth/signout`,
-    {},
-    {
+  try {
+    await axios.post(
+      `${API_BASE_URL}/api/auth/signout`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+  } catch (error) {
+    return await Promise.reject(error);
+  }
+};
+
+export const addMyHotel = async (hotelFormData: FormData) => {
+  try {
+    await axios.post(`${API_BASE_URL}/api/my-hotels`, hotelFormData, {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
       withCredentials: true,
-    }
-  );
-  if (response.status !== 200) {
-    throw new Error(response.data);
+    });
+  } catch (error) {
+    return await Promise.reject(error);
   }
 };

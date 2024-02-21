@@ -1,12 +1,15 @@
 import { useMutation, useQueryClient } from "react-query";
 import { signOut } from "../api/index";
 import Toast from "./Toast";
+import { useNavigate } from "react-router-dom";
 function SignOut() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const mutation = useMutation(signOut, {
     onSuccess: async () => {
       await queryClient.invalidateQueries("validateToken");
       Toast({ message: "Signed Out!!", type: "SUCCESS" });
+      navigate("/");
     },
     onError: (error: Error) => {
       Toast({ message: error.message, type: "ERROR" });
