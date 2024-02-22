@@ -68,7 +68,7 @@ export const addMyHotel = async (hotelFormData: FormData) => {
   try {
     await axios.post(`${API_BASE_URL}/api/my-hotels`, hotelFormData, {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
       withCredentials: true,
     });
@@ -84,6 +84,41 @@ export const fetchMyHotel = async (): Promise<HotelType[]> => {
       },
       withCredentials: true,
     });
+    return response.data;
+  } catch (error) {
+    return await Promise.reject(error);
+  }
+};
+
+export const fetchHotelById = async (hotelId: string): Promise<HotelType> => {
+  try {
+    const reponse = await axios.get(
+      `${API_BASE_URL}/api/my-hotels/${hotelId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+    return reponse.data;
+  } catch (error) {
+    return await Promise.reject(error);
+  }
+};
+
+export const updateMyHotel = async (hotelData: FormData) => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/api/my-hotels/${hotelData.get("hotelId")}`,
+      hotelData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     return await Promise.reject(error);

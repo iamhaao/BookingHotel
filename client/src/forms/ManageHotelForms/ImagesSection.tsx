@@ -1,20 +1,59 @@
 import { useFormContext } from "react-hook-form";
 import { HotelFormData } from "./ManageHotelForm";
+import React from "react";
 
 function ImagesSection() {
   const {
     register,
     formState: { errors },
+    watch,
+    setValue,
   } = useFormContext<HotelFormData>();
+
+  const existingImageUrls = watch("imageUrls");
+  const handleDelete = (
+    even: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    imageUrl: string
+  ) => {
+    even.preventDefault();
+    setValue(
+      "imageUrls",
+      // existingImageUrls.filter((url) => {
+      //   url !== imageUrl;
+      // })
+      existingImageUrls.filter((url) => url !== imageUrl)
+    );
+  };
+
   return (
     <div>
       <h2 className="text-2xl font-bold mb-3">Images</h2>
       <div className="border rounded p-4 flex-col gap-4">
+        {existingImageUrls && (
+          <div className="grid grid-cols-6 gap-4">
+            {existingImageUrls.map((url) => (
+              <div className="relative group" key={url}>
+                <img
+                  src={url}
+                  className="min-h-full object-cover"
+                  alt="Image"
+                />
+                <button
+                  onClick={(event) => handleDelete(event, url)}
+                  className="absolute inset-0 flex items-center justify-center bg-opacity-50 opacity-0 group-hover:opacity-100 bg-black"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
         <input
           type="file"
           {...register("imageFiles", {
             validate: (imageFiles) => {
-              const totalLength = imageFiles.length;
+              const totalLength =
+                imageFiles.length + (existingImageUrls?.length || 0);
               if (totalLength === 0) {
                 return " At least one iamge should be added";
               }
