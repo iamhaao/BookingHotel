@@ -1,9 +1,10 @@
 import { body } from "express-validator";
-import Hotel, { HotelType } from "./../models/hotel";
+import Hotel from "./../models/hotel";
 import cloudinary from "cloudinary";
 import express, { Request, Response } from "express";
 import multer from "multer";
 import verifyToken from "../middleware/auth";
+import { HotelType } from "../../shared/types";
 const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({
