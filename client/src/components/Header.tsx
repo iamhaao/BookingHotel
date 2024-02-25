@@ -30,7 +30,7 @@ function Header() {
           ) : (
             <>
               <Link
-                to="/signin"
+                to="/sign-in"
                 className="flex items-center mx-4 bg-white text-blue-600 px-3 font-bold hover:bg-gray-300"
               >
                 Sign In

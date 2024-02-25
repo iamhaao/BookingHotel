@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout";
 import { useMutation, useQueryClient } from "react-query";
 import { ApiResponse, signIn } from "../api";
 import Toast from "../components/Toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
 export type SignInFormData = {
@@ -13,7 +13,7 @@ export type SignInFormData = {
 function SignIn() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
+  const location = useLocation();
   const {
     register,
     handleSubmit,
@@ -23,6 +23,7 @@ function SignIn() {
     onSuccess: async () => {
       Toast({ message: "Welcome to !", type: "SUCCESS" });
       navigate("/");
+      navigate(location.state?.from?.pathname || "/");
       queryClient.invalidateQueries("validateToken");
     },
     onError: (error: AxiosError<ApiResponse>) => {
@@ -76,7 +77,7 @@ function SignIn() {
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-1 text-sm">
             Do not have accunt?{" "}
-            <Link className="underline text-blue-500" to="/signup">
+            <Link className="underline text-blue-500" to="/sign-up">
               Create an Account here
             </Link>{" "}
           </span>
