@@ -1,4 +1,4 @@
-import { HotelSearchResponse } from "./../../../server/shared/types";
+import { HotelSearchResponse, UserType } from "./../../../server/shared/types";
 import axios from "axios";
 import { RegisterFormData } from "../pages/SignUp";
 import { SignInFormData } from "../pages/SignIn";
@@ -8,6 +8,21 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export interface ApiResponse {
   message: string;
 }
+
+export const fetchCurrentUser = async (): Promise<UserType> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/users/me`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return await Promise.reject(error);
+  }
+};
 export const register = async (formData: RegisterFormData) => {
   try {
     await axios.post(`${API_BASE_URL}/api/users/signup`, formData, {
