@@ -1,11 +1,16 @@
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import * as apiClient from "../api/index";
+import { loadStripe, Stripe } from "@stripe/stripe-js";
+
+const STRIPE_PUB_KEY = import.meta.env.STRIPE_PUB_KEY || "";
 type AppContext = {
   isLoggedIn: boolean;
+  stripePromise: Promise<Stripe | null>;
 };
-
 const AppContext = React.createContext<AppContext | undefined>(undefined);
+
+const stripePromise = loadStripe(STRIPE_PUB_KEY);
 
 export const AppContextProvider = ({
   children,
@@ -19,6 +24,7 @@ export const AppContextProvider = ({
     <AppContext.Provider
       value={{
         isLoggedIn: !isError,
+        stripePromise: stripePromise,
       }}
     >
       {children}

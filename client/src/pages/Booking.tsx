@@ -1,13 +1,16 @@
 import { useQuery } from "react-query";
-import { fetchCurrentUser, fetchHotelById } from "../api";
+import { createPaymentIntent, fetchCurrentUser, fetchHotelById } from "../api";
 import Layout from "../layouts/Layout";
 import BookingForm from "../forms/BookingForm/BookingForm";
 import { useSearchContext } from "../contexts/SearchContext";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import BookingDetailsSummary from "../components/BookingDetailsSummary";
+import { Elements } from "@stripe/react-stripe-js";
+import { useAppContext } from "../contexts/AppContext";
 
 function Booking() {
+  const { stripePromise } = useAppContext();
   const search = useSearchContext();
   const { hotelId } = useParams();
 
@@ -15,16 +18,26 @@ function Booking() {
   useEffect(() => {
     if (search?.checkIn && search.checkOut) {
       const nights =
-        Math.abs(search.checkOut.getTime() - search.checkOut.getTime()) /
+        Math.abs(search.checkOut.getTime() - search.checkIn.getTime()) /
         (1000 * 60 * 60 * 24);
       setNumberOfNight(Math.ceil(nights));
     }
   }, [search?.checkIn, search?.checkOut]);
-  const { data: hotel } = useQuery("fetchHotelById", () =>
-    fetchHotelById(hotelId as string)
+
+  const { data: paymentIntentData } = useQuery(
+    ["createPaymentIntent", hotelId, numberOfNight], // Add numberOfNight to the query key
+    () => createPaymentIntent(hotelId as string, numberOfNight.toString()),
+    { enabled: !!hotelId && numberOfNight > 0 }
+  );
+
+  const { data: hotel } = useQuery(
+    "fetchHotelById",
+    () => fetchHotelById(hotelId as string),
+    {
+      enabled: !!hotelId && numberOfNight > 0,
+    }
   );
   const { data: currentUSer } = useQuery("fetchCurrentUser", fetchCurrentUser);
-  console.log(currentUSer?.email);
   return (
     <Layout>
       <div className="grid md:grid-cols-[1fr_2fr] gap-5">
@@ -36,7 +49,19 @@ function Booking() {
           numberOfNights={numberOfNight}
           hotel={hotel}
         />
-        {currentUSer && <BookingForm currentUser={currentUSer} />}
+        {currentUSer && paymentIntentData && (
+          <Elements
+            stripe={stripePromise}
+            options={{
+              clientSecret: paymentIntentData.clientSecret,
+            }}
+          >
+            <BookingForm
+              currentUser={currentUSer}
+              paymentIntent={paymentIntentData}
+            />
+          </Elements>
+        )}
       </div>
     </Layout>
   );

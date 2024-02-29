@@ -1,8 +1,13 @@
-import { HotelSearchResponse, UserType } from "./../../../server/shared/types";
+import {
+  HotelSearchResponse,
+  PaymentIntentResponse,
+  UserType,
+} from "./../../../server/shared/types";
 import axios from "axios";
 import { RegisterFormData } from "../pages/SignUp";
 import { SignInFormData } from "../pages/SignIn";
 import { HotelType, SearchParams } from "../models";
+import { BookingFormData } from "../forms/BookingForm/BookingForm";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export interface ApiResponse {
@@ -183,6 +188,45 @@ export const fetchHotel = async (hotelId: string): Promise<HotelType> => {
       },
       withCredentials: true,
     });
+    return response.data;
+  } catch (error) {
+    return await Promise.reject(error);
+  }
+};
+
+export const createPaymentIntent = async (
+  hotelId: string,
+  numberOfNights: string
+): Promise<PaymentIntentResponse> => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/hotels/${hotelId}/bookings/payment-intent`,
+      { numberOfNights },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return await Promise.reject(error);
+  }
+};
+
+export const createBooking = async (formData: BookingFormData) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/hotels/${formData.hotelId}/bookings`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     return await Promise.reject(error);
