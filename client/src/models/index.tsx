@@ -1,3 +1,5 @@
+import { BookingType } from "../../../server/shared/types";
+
 export type HotelType = {
   _id: string;
   userId: string;
@@ -13,6 +15,7 @@ export type HotelType = {
   startRating: number;
   imageUrls: string[];
   lastUpdated: Date;
+  bookings: BookingType[];
 };
 
 export type SearchParams = {

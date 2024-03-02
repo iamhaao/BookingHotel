@@ -9,11 +9,12 @@ router.get("/", verifyToken, async (req: Request, res: Response) => {
     const hotels = await Hotel.find({
       bookings: { $elemMatch: { userId: req.userId } },
     });
-
     const result = hotels.map((hotel) => {
+      console.log(hotel.bookings);
       const userBookings = hotel.bookings.filter((booking) => {
-        booking.userId === req.userId;
+        return booking.userId === req.userId;
       });
+      console.log(userBookings);
       const hotelWithUserBookings: HotelType = {
         ...hotel.toObject(),
         bookings: userBookings,

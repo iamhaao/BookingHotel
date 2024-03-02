@@ -232,3 +232,18 @@ export const createBooking = async (formData: BookingFormData) => {
     return await Promise.reject(error);
   }
 };
+
+export const fetchMyBookings = async (): Promise<HotelType[]> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/my-bookings`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+
+    return response.data;
+  } catch (error) {
+    return await Promise.reject(error);
+  }
+};
