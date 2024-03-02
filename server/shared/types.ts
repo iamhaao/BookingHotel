@@ -36,7 +36,6 @@ export type BookingType = {
   checkIn: Date;
   checkOut: Date;
   totalCost: number;
-  bookings: BookingType[];
 };
 export type HotelSearchResponse = {
   data: HotelType[];

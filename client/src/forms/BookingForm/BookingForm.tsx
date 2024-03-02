@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useForm } from "react-hook-form";
 import {
   PaymentIntentResponse,
   UserType,
 } from "../../../../server/shared/types";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { StripeCardElement } from "@stripe/stripe-js";
+
 import { useSearchContext } from "../../contexts/SearchContext";
 import { useParams } from "react-router-dom";
 import { useMutation } from "react-query";
@@ -58,19 +59,19 @@ function BookingForm({ currentUser, paymentIntent }: Props) {
   });
 
   const onSubmit = async (formData: BookingFormData) => {
-    if (!stripe) {
-      return;
-    }
-    const result = await stripe.confirmCardPayment(paymentIntent.clientSecret, {
-      payment_method: {
-        card: elements?.getElement(CardElement) as StripeCardElement,
-      },
-    });
-    console.log(result);
-    if (result.paymentIntent?.status === "succeeded") {
-      //book the room success
-      bookRoom({ ...formData, paymentIntentId: result.paymentIntent.id });
-    }
+    // if (!stripe) {
+    //   return;
+    // }
+    // const result = await stripe.confirmCardPayment(paymentIntent.clientSecret, {
+    //   payment_method: {
+    //     card: elements?.getElement(CardElement) as StripeCardElement,
+    //   },
+    // });
+    // if (result.paymentIntent?.status === "succeeded") {
+    //   //book the room success
+    //   bookRoom({ ...formData, paymentIntentId: result.paymentIntent.id });
+    // }
+    bookRoom({ ...formData });
   };
   return (
     <form

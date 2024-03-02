@@ -222,7 +222,7 @@ export const createBooking = async (formData: BookingFormData) => {
       formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
         withCredentials: true,
       }

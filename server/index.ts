@@ -6,6 +6,7 @@ import userRoutes from "./src/routes/users";
 import authRoutes from "./src/routes/auth";
 import hotelRoutes from "./src/routes/my-hotels";
 import hotelsRoutes from "./src/routes/hotels";
+import bookingRoutes from "./src/routes/my-bookings";
 import cookieParser from "cookie-parser";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -30,6 +31,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/my-hotels", hotelRoutes);
 app.use("/api/hotels", hotelsRoutes);
+app.use("/api/my-bookings", bookingRoutes);
+
 app.listen(5000, () => {
   console.log("Server running on localhost:5000");
 });

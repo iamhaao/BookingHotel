@@ -83,7 +83,6 @@ router.post(
     //2.HotelId
     //3.userId
     try {
-      console.log(req.body);
       const { numberOfNights } = req.body;
       const hotelId = req.params.hotelId;
       const hotel = await Hotel.findById(hotelId);
@@ -121,48 +120,46 @@ router.post(
   verifyToken,
   async (req: Request, res: Response) => {
     try {
-      const paymentIntentId = req.body.paymentIntentId;
-      const paymentIntent = await stripe.paymentIntents.retrieve(
-        paymentIntentId as string
-      );
-      if (!paymentIntent) {
-        return res.status(400).json({ message: "payment intent not found" });
-      }
-      if (
-        paymentIntent.metadata.hotelId !== req.params.hotelId ||
-        paymentIntent.metadata.userId !== req.userId
-      ) {
-        return res.status(400).json({ message: "payment intent is mismatch" });
-      }
-      if (paymentIntent.status !== "succeeded") {
-        return res.status(400).json({
-          message: `payment intent not succeeded. Status: ${paymentIntent.status} `,
-        });
-      }
+      // Uncomment this block if you're going to use the Stripe paymentIntent logic
+      // const paymentIntentId = req.body.paymentIntentId;
+      // const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId as string);
+      // if (!paymentIntent) {
+      //   return res.status(400).json({ message: "payment intent not found" });
+      // }
+      // if (
+      //   paymentIntent.metadata.hotelId !== req.params.hotelId ||
+      //   paymentIntent.metadata.userId !== req.userId
+      // ) {
+      //   return res.status(400).json({ message: "payment intent is mismatch" });
+      // }
+      // if (paymentIntent.status !== "succeeded") {
+      //   return res.status(400).json({
+      //     message: `payment intent not succeeded. Status: ${paymentIntent.status} `,
+      //   });
+      // }
 
-      const newBooking: BookingType = {
+      const newBookingData: BookingType = {
         ...req.body,
         userId: req.userId,
       };
-
-      const hotel = await Hotel.findOneAndUpdate(
-        { _id: req.params.hotelId },
-        {
-          $push: { bookings: newBooking },
-        }
-      );
+      const hotel = await Hotel.findOne({ _id: req.params.hotelId });
 
       if (!hotel) {
         return res.status(400).json({ message: "Hotel not found" });
       }
+
+      hotel.bookings.push(newBookingData);
       await hotel.save();
+
+      console.log(hotel.bookings);
       res.status(200).json();
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "something went wrong" });
+      console.error(error);
+      res.status(500).json({ message: "Something went wrong" });
     }
   }
 );
+
 const constructSearchQuery = (queryParams: any) => {
   let constructSearchQuery: any = {};
   if (queryParams.destination) {
