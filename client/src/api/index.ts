@@ -194,6 +194,20 @@ export const fetchHotel = async (hotelId: string): Promise<HotelType> => {
   }
 };
 
+export const fetchHotels = async (): Promise<HotelType[]> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/hotels`, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    return await Promise.reject(error);
+  }
+};
+
 export const createPaymentIntent = async (
   hotelId: string,
   numberOfNights: string

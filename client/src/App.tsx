@@ -1,6 +1,5 @@
 import "./App.css";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
-import Layout from "./layouts/Layout";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import AddHotel from "./pages/AddHotel";
@@ -11,13 +10,14 @@ import Search from "./pages/Search";
 import Detail from "./pages/Detail";
 import Booking from "./pages/Booking";
 import MyBooking from "./pages/MyBooking";
+import Home from "./pages/Home";
 
 function App() {
   const { isLoggedIn } = useAppContext();
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout>Home Page</Layout>} />
+        <Route path="/" element={<Home />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/search" element={<Search />} />
