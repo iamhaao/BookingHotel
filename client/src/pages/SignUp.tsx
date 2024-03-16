@@ -54,6 +54,10 @@ function SignUp() {
             <input
               {...register("firstName", {
                 required: "Firstname is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: "Invalid email address",
+                },
               })}
               className="border rounded-lg w-full py-1 px-2 font-normal"
             />

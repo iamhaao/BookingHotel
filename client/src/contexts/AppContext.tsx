@@ -8,7 +8,7 @@ type AppContext = {
   isLoggedIn: boolean;
   stripePromise: Promise<Stripe | null>;
 };
-const AppContext = React.createContext<AppContext | undefined>(undefined);
+  const AppContext = React.createContext<AppContext | undefined>(undefined);
 
 const stripePromise = loadStripe(STRIPE_PUB_KEY);
 
